@@ -1,7 +1,0 @@
-Django>=4.2
-python-dotenv
-numpy
-matplotlib
-seaborn
-requests
-pandas
