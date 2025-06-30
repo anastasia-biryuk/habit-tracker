@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Статистика за неделю</h2>
+
+  <div>
+    <img src="data:image/png;base64,{{ graph_image }}" alt="График выполнения привычек">
+  </div>
+
+  <h3>Средняя частота выполнения:</h3>
+  <ul>
+    {% for name, rate in rates.items %}
+    <li>{{ name }} — {{ rate|floatformat:1 }} %</li>
+    {% endfor %}
+  </ul>
+  
+{% endblock %}

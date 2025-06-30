@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-3">Дневник привычек</h2>
+
+{% if quote %}
+  <div class="alert alert-info">{{ quote }}</div>
+{% endif %}
+
+<table class="table table-bordered table-striped text-center">
+  <thead class="table-dark">
+    <tr>
+      <th>Привычка</th>
+      <th>Категория</th>
+      <th>Описание</th>
+      {% for d in days %}
+        <th>{{ d|date:"d.m.Y" }}</th>
+      {% endfor %}
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for hr in habit_rows %}
+      <tr>
+        <td>{{ hr.habit.name }}</td>
+        <td>{{ hr.habit.category }}</td>
+        <td>{{ hr.habit.description }}</td>
+
+        {% for e in hr.entries %}
+          <td>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="habit_id" value="{{ hr.habit.id }}">
+              <input type="hidden" name="date"     value="{{ e.date|date:'Y-m-d' }}">
+              <input
+                type="checkbox"
+                name="completed"
+                onchange="this.form.submit()"
+                {% if e.done %}checked{% endif %}
+              >
+            </form>
+          </td>
+        {% endfor %}
+
+        <td>
+          <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="habit_id" value="{{ hr.habit.id }}">
+            <button type="submit" name="delete_habit" class="btn btn-danger btn-sm">
+              Удалить
+            </button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{% url 'add_habit' %}"      class="btn btn-success">Добавить привычку</a>
+<a href="{% url 'upload_csv' %}"     class="btn btn-primary">Импорт CSV</a>
+<a href="{% url 'habit_analysis' %}" class="btn btn-info">Анализ привычек</a>
+{% endblock %}
